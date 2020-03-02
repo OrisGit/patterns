@@ -18,8 +18,8 @@ public class Main {
     }
 
     public static void test(TransportFactory factory) throws DuplicateModelNameException, NoSuchModelNameException {
-        ModelsStatisticCalculator.setFactory(factory);
-        Transport original = ModelsStatisticCalculator.createInstance("Tesla", 10);
+        TransportUtil.setFactory(factory);
+        Transport original = TransportUtil.createInstance("Tesla", 10);
         original.addModel("Model S", 2000000);
         original.addModel("Model X", 3000000);
         original.addModel("Model A", 1000000);

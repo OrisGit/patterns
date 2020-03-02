@@ -18,8 +18,8 @@ public class Main {
     private static void test(TransportFactory transportFactory) throws Exception{
         log.printLog("Log for "+transportFactory.getClass().getName());
 
-        ModelsStatisticCalculator.setFactory(transportFactory);
-        Transport transport = ModelsStatisticCalculator.createInstance("Tesla", 10);
+        TransportUtil.setFactory(transportFactory);
+        Transport transport = TransportUtil.createInstance("Tesla", 10);
         transport.addModel("Model S", 2000000);
         transport.addModel("Model X", 3000000);
         transport.addModel("Model A", 1000000);
@@ -30,11 +30,11 @@ public class Main {
         }
 
 
-        ModelsStatisticCalculator.printAllModels(transport);
+        TransportUtil.printAllModels(transport);
 
         transport.removeModel("Model S");
 
-        ModelsStatisticCalculator.printAllModels(transport);
+        TransportUtil.printAllModels(transport);
 
         try{
 
@@ -43,9 +43,9 @@ public class Main {
             log.printError(e);
         }
 
-        ModelsStatisticCalculator.printAllModels(transport);
+        TransportUtil.printAllModels(transport);
 
-        ModelsStatisticCalculator.printAllPrices(transport);
+        TransportUtil.printAllPrices(transport);
 
         try {
             transport.changeModelPrice("Model A", -500);
@@ -54,6 +54,6 @@ public class Main {
         }
 
         transport.changeModelPrice("Model A", 500);
-        ModelsStatisticCalculator.printAllPrices(transport);
+        TransportUtil.printAllPrices(transport);
     }
 }

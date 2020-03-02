@@ -140,8 +140,8 @@ public class Motorcycle implements Transport {
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("The class does not support cloning", e);
         }
-        clone.brand = this.brand;
-        clone.size = this.size;
+        //clone.brand = this.brand;
+        //clone.size = this.size;
         clone.head = new Model();
         clone.head.prev = clone.head;
         clone.head.next = clone.head;

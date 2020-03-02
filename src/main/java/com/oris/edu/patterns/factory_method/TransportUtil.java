@@ -1,13 +1,19 @@
 package com.oris.edu.patterns.factory_method;
 
+import com.oris.edu.patterns.decorator.SynchronizedTransport;
+
 import java.util.Arrays;
 
-public class ModelsStatisticCalculator {
+public class TransportUtil {
 
     private static TransportFactory factory = new CarFactory();
 
     public static void setFactory(TransportFactory factory) {
-         ModelsStatisticCalculator.factory = factory;
+         TransportUtil.factory = factory;
+    }
+
+    public static Transport synchronizedTransport(Transport transport){
+        return new SynchronizedTransport(transport);
     }
 
     public static Transport createInstance(String brand, int modelsQuantity){
