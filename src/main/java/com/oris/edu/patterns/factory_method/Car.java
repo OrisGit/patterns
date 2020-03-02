@@ -129,8 +129,8 @@ public class Car implements Transport {
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("The class does not support cloning", e);
         }
-        clone.brand = this.brand;
-        clone.modelsQuantity = this.modelsQuantity;
+        //clone.brand = this.brand;
+        //clone.modelsQuantity = this.modelsQuantity;
         clone.models = new Model[this.models.length];
         for (int i = 0; i < this.models.length; i++) {
             if(this.models[i]!=null)

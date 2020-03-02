@@ -13,7 +13,9 @@ public class PropertiesLoader {
     private static Properties properties;
     private static Logger logger = LoggerFactory.getLogger(PropertiesLoader.class);
 
-    public static Properties load(){
+    private PropertiesLoader(){};
+
+    public  synchronized static Properties load(){
         if(properties == null){
             logger.printLog(ConsoleTextColor.ANSI_YELLOW,"Create new object");
             properties = new Properties();
