@@ -5,6 +5,7 @@ import com.oris.edu.patterns.factory_method.exceptions.ModelPriceOutOfBoundsExce
 import com.oris.edu.patterns.factory_method.exceptions.NoSuchModelNameException;
 import com.oris.edu.patterns.logger.Logger;
 import com.oris.edu.patterns.logger.LoggerFactory;
+import com.oris.edu.patterns.visitor.Visitor;
 
 import java.util.Optional;
 
@@ -156,6 +157,11 @@ public class Motorcycle implements Transport {
     @Override
     public int getModelsQuantity() {
         return size;
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitMotorcycle(this);
     }
 
     private Optional<Model> findModel(String modelName) {

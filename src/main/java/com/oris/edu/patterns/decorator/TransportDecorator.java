@@ -3,6 +3,7 @@ package com.oris.edu.patterns.decorator;
 import com.oris.edu.patterns.factory_method.Transport;
 import com.oris.edu.patterns.factory_method.exceptions.DuplicateModelNameException;
 import com.oris.edu.patterns.factory_method.exceptions.NoSuchModelNameException;
+import com.oris.edu.patterns.visitor.Visitor;
 
 public class TransportDecorator implements Transport {
 
@@ -65,5 +66,10 @@ public class TransportDecorator implements Transport {
     @Override
     public int getModelsQuantity() {
         return transport.getModelsQuantity();
+    }
+
+    @Override
+    public void accept(Visitor visitor) {
+        transport.accept(visitor);
     }
 }
