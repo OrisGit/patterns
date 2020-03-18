@@ -2,6 +2,7 @@ package com.oris.edu.patterns.factory_method;
 
 import com.oris.edu.patterns.factory_method.exceptions.DuplicateModelNameException;
 import com.oris.edu.patterns.factory_method.exceptions.NoSuchModelNameException;
+import com.oris.edu.patterns.visitor.Visitor;
 
 public interface Transport extends Cloneable{
     String getBrand();
@@ -25,4 +26,6 @@ public interface Transport extends Cloneable{
     Transport clone();
 
     int getModelsQuantity();
+
+    void accept(Visitor visitor);
 }

@@ -1,23 +1,25 @@
 package com.oris.edu.patterns.factory_method;
 
+import com.oris.edu.patterns.command.Command;
 import com.oris.edu.patterns.factory_method.exceptions.DuplicateModelNameException;
 import com.oris.edu.patterns.factory_method.exceptions.ModelPriceOutOfBoundsException;
 import com.oris.edu.patterns.factory_method.exceptions.NoSuchModelNameException;
 import com.oris.edu.patterns.logger.Logger;
 import com.oris.edu.patterns.logger.LoggerFactory;
+import com.oris.edu.patterns.visitor.Visitor;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
+import java.io.*;
+import java.util.*;
 
 import static com.oris.edu.patterns.logger.ConsoleTextColor.ANSI_YELLOW;
 
-public class Car implements Transport {
+public class Car implements Transport, Serializable{
     private String brand;
     private Model[] models;
     private int modelsQuantity;
+    private Command command;
 
-    private Logger log = LoggerFactory.getLogger(Car.class);
+    private transient Logger log = LoggerFactory.getLogger(Car.class);
 
     public Car(String brand, int modelsQuantity) {
         this.brand = brand;
@@ -122,10 +124,15 @@ public class Car implements Transport {
         return modelsQuantity;
     }
 
-    public Transport clone(){
+    @Override
+    public void accept(Visitor visitor) {
+        visitor.visitCar(this);
+    }
+
+    public Transport clone() {
         Car clone;
-        try{
-            clone = (Car)super.clone();
+        try {
+            clone = (Car) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException("The class does not support cloning", e);
         }
@@ -133,7 +140,7 @@ public class Car implements Transport {
         //clone.modelsQuantity = this.modelsQuantity;
         clone.models = new Model[this.models.length];
         for (int i = 0; i < this.models.length; i++) {
-            if(this.models[i]!=null)
+            if (this.models[i] != null)
                 clone.models[i] = new Model(this.models[i].name, this.models[i].price);
         }
         return clone;
@@ -151,11 +158,38 @@ public class Car implements Transport {
                 "brand='" + brand + "\'\n" +
                 ", models=" + Arrays.toString(models) + "\n" +
                 ", modelsQuantity=" + modelsQuantity + "\n" +
-        ", log=" + log +
+                ", log=" + log +
                 '}';
     }
 
-    private class Model implements Cloneable{
+    public void print(OutputStream outputStream) throws IOException {
+        if (command != null)
+            command.execute(outputStream);
+    }
+
+    public void setCommand(Command command) {
+        this.command = command;
+    }
+
+    public Iterator<Model> iterator() {
+        return new CarIterator(this);
+    }
+
+    //-------------- Memento ----------------------
+    public Memento createMemento() throws IOException {
+        Memento memento = new Memento();
+        memento.setCar(this);
+        return memento;
+    }
+
+    public void setMemento(Memento memento) throws IOException, ClassNotFoundException {
+        Car car = memento.getCar();
+        this.models = car.models;
+        this.modelsQuantity = car.modelsQuantity;
+        this.brand = car.brand;
+    }
+
+    public static class Model implements Cloneable, Serializable {
         String name;
         double price;
 
@@ -164,14 +198,14 @@ public class Car implements Transport {
             this.price = price;
         }
 
-        Model(Model original){
-            if(original!=null){
+        Model(Model original) {
+            if (original != null) {
                 this.name = original.name;
                 this.price = original.price;
             }
         }
 
-        public Model clone(){
+        public Model clone() {
             return new Model(this);
         }
 
@@ -181,6 +215,49 @@ public class Car implements Transport {
                     "name='" + name + '\'' +
                     ", price=" + price +
                     '}';
+        }
+    }
+
+    private static class CarIterator implements Iterator<Model> {
+        Logger logger = LoggerFactory.getLogger(CarIterator.class);
+
+        private Car car;
+        private int currentPosition;
+
+        private CarIterator(Car car) {
+            this.car = car;
+            this.currentPosition = 0;
+        }
+
+        @Override
+        public boolean hasNext() {
+            //logger.printLog("Has next");
+            return currentPosition < car.modelsQuantity;
+        }
+
+        @Override
+        public Model next() {
+            //logger.printLog("Next");
+            return car.models[currentPosition++];
+        }
+    }
+
+    public static class Memento {
+        private String backup;
+
+        public void setCar(Car car) throws IOException {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try(ObjectOutputStream oos = new ObjectOutputStream(baos)){
+                oos.writeObject(car);
+            }
+            backup = Base64.getEncoder().encodeToString(baos.toByteArray());
+        }
+
+        public Car getCar() throws IOException, ClassNotFoundException {
+            byte[] data = Base64.getDecoder().decode(backup);
+            try(ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data))){
+                return (Car) ois.readObject();
+            }
         }
     }
 }

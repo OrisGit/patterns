@@ -19,8 +19,8 @@ public class ColumnTransportFileWriter extends TransportFileWriter {
                             .append("Price: ").append(transport.getModelPrice(allModelNames[i]));
                 } catch (Exception ignored) {
                 }
-                writeToFile("column.txt", builder.toString());
             }
+            writeToFile("column.txt", builder.toString());
         } else {
             checkNext(transport);
         }

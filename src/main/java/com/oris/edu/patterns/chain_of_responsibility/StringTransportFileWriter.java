@@ -19,8 +19,8 @@ public class StringTransportFileWriter extends TransportFileWriter {
                             .append("Price: ").append(transport.getModelPrice(allModelNames[i]));
                 } catch (Exception ignored) {
                 }
-                writeToFile("string.txt", builder.toString());
             }
+            writeToFile("string.txt", builder.toString());
         } else {
             checkNext(transport);
         }
