@@ -7,13 +7,14 @@ import com.oris.edu.patterns.logger.Logger;
 import com.oris.edu.patterns.logger.LoggerFactory;
 import com.oris.edu.patterns.visitor.Visitor;
 
+import java.io.Serializable;
 import java.util.Optional;
 
 import static com.oris.edu.patterns.logger.ConsoleTextColor.ANSI_YELLOW;
 
 
-public class Motorcycle implements Transport {
-    private Logger log = LoggerFactory.getLogger(Motorcycle.class);
+public class Motorcycle implements Transport, Serializable {
+    private transient Logger log = LoggerFactory.getLogger(Motorcycle.class);
 
     private String brand;
     private Model head = new Model();
@@ -195,7 +196,7 @@ public class Motorcycle implements Transport {
         return stringBuilder.toString();
     }
 
-    private class Model {
+    private class Model implements Serializable{
         String name = null;
         double price = Double.NaN;
         Model prev = null;
